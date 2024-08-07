@@ -2,18 +2,21 @@
 #![no_std]
 
 extern crate alloc;
-mod allocator;
-mod vector;
+mod collections;
+mod vars;
+mod utils;
+mod memory;
 
 use core::panic::PanicInfo;
 use libc::c_int;
 
-use allocator::LibcAllocator;
-use vector::SimpleVec;
+use memory::allocators::LibcMalloc;
+use collections::vector::SimpleVec;
+use vars::string::SimpleString;
 
 
 #[global_allocator]
-static GLOBAL: LibcAllocator = LibcAllocator;
+static GLOBAL: LibcMalloc = LibcMalloc;
 
 // personality and unwind has been given with the following:
 // https://github.com/rust-lang/rust/issues/106864
@@ -49,5 +52,20 @@ pub extern "C" fn main() {
 
             libc::printf("Value: %d\n\0".as_ptr() as *const i8, integer);
         }
+    }
+
+    for value in &vec {
+        unsafe {
+            libc::printf("Value: %d\n\0".as_ptr() as *const i8, value as c_int);
+        }
+    }
+
+    unsafe {
+        libc::printf("Vector Length: %d\n\0".as_ptr() as *const i8, vec.length as c_int);
+    }
+
+    let s = SimpleString::from("Hello, World!");
+    unsafe {
+        libc::printf("String: %s\n\0".as_ptr() as *const i8, s.as_str().as_ptr());
     }
 }

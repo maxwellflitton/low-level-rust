@@ -6,6 +6,7 @@ pub struct SimpleVec {
     ptr: NonNull<u8>,
     capacity: usize,
     pub length: usize,
+    iter_index: usize,
 }
 
 impl SimpleVec {
@@ -20,7 +21,7 @@ impl SimpleVec {
         let ptr: *mut u8 = unsafe { alloc(layout) };
         // if the pointer is null, abort the program
         let ptr: NonNull<u8> = NonNull::new(ptr).unwrap_or_else(|| unsafe { libc::abort() });
-        SimpleVec { ptr, capacity, length: 0 }
+        SimpleVec { ptr, capacity, length: 0, iter_index: 0 }
     }
 
     pub fn push(&mut self, value: u8) {
@@ -60,6 +61,55 @@ impl Drop for SimpleVec {
         let layout = Layout::array::<u8>(self.capacity).unwrap();
         unsafe {
             dealloc(self.ptr.as_ptr(), layout);
+        }
+    }
+}
+
+
+
+impl Iterator for SimpleVec {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.iter_index < self.length {
+            let item = unsafe { core::ptr::read(self.ptr.as_ptr().add(self.iter_index)) };
+            self.iter_index += 1;
+            Some(item)
+        } else {
+            None
+        }
+    }
+}
+
+
+// Implementing IntoIterator for &SimpleVec
+impl<'a> IntoIterator for &'a SimpleVec {
+    type Item = u8;
+    type IntoIter = SimpleVecIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        SimpleVecIterator {
+            simple_vec: self,
+            index: 0,
+        }
+    }
+}
+
+pub struct SimpleVecIterator<'a> {
+    simple_vec: &'a SimpleVec,
+    index: usize,
+}
+
+impl<'a> Iterator for SimpleVecIterator<'a> {
+    type Item = u8;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index < self.simple_vec.length {
+            let item = unsafe { core::ptr::read(self.simple_vec.ptr.as_ptr().add(self.index)) };
+            self.index += 1;
+            Some(item)
+        } else {
+            None
         }
     }
 }
