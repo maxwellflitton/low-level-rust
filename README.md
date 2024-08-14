@@ -20,6 +20,11 @@ a series of exercises for low level Rust with no standard library
 - [ ] Manual Memory Handling: Implement utilities for manual memory management, such as `malloc`, `free`, and memory safety features.
 
 ## Concurrency Primitives
+- [ ] Atomic bool
+- [ ] Atomic integer
+- [ ] Atomic reference counter
+- [ ] Atomic pointer
+- [ ] Atomic reference
 - [ ] Mutex: Implement a basic mutex for thread safety.
 - [ ] Spinlock: Implement a simple spinlock for lightweight locking in concurrent programming.
 - [ ] Channels: Create a minimal version of channels for inter-thread communication.
@@ -36,11 +41,6 @@ a series of exercises for low level Rust with no standard library
 ## Error Handling
 - [ ] Custom Error Types: Create a base error handling mechanism, similar to Rust's `Result` and `Option` types.
 - [ ] Panic Handling: Implement a simple panic handler that works without the standard library.
-
-## Collections
-- [ ] Linked List: Implement a basic singly and doubly linked list.
-- [ ] Binary Tree: Create a binary search tree, which will help you explore recursion and memory layout management.
-- [ ] Set: Implement a basic set using a hash-based or tree-based approach.
 
 ## Math and Algorithms
 - [ ] Basic Math Functions: Implement fundamental math functions like `sqrt`, `log`, `exp`, etc.
