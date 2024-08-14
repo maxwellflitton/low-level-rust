@@ -1,0 +1,7 @@
+[package]
+name = "testing_harness"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+base-layer = { path = "../base_layer" }
