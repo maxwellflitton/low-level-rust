@@ -1,7 +1,6 @@
 use alloc::alloc::{alloc, dealloc, Layout};
 use core::ptr::NonNull;
 
-
 pub struct SimpleString {
     ptr: NonNull<u8>,
     capacity: usize,
@@ -45,7 +44,6 @@ impl Drop for SimpleString {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
 
@@ -56,5 +54,31 @@ mod tests {
         let s = SimpleString::from("Hello, World!");
         assert_eq!(s.as_str(), "Hello, World!");
     }
+
+    #[test]
+    fn test_empty_string() {
+        let s = SimpleString::from("");
+        assert_eq!(s.as_str(), "");
+        assert_eq!(s.capacity, 0);
+        assert_eq!(s.length, 0);
+    }
+
+    #[test]
+    fn test_empty_string() {
+        let s = SimpleString::from("");
+        assert_eq!(s.as_str(), "");
+        assert_eq!(s.capacity, 0);
+        assert_eq!(s.length, 0);
+    }
+
+    // other unit test ideas:
+    // long string
+    // non-ascii? - but this wont work because of implementation?
+    // test drop
+    // 
+
+
+
+    // remember to uncomment panic handler code in main.rs
 
 }
