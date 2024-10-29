@@ -1,6 +1,7 @@
 use alloc::alloc::{alloc, dealloc, Layout};
 use core::ptr::NonNull;
 
+// SimpleString has 3 fields: ptr to allocated memory, capacity; amount of memory allocated, current length of string
 pub struct SimpleString {
     ptr: NonNull<u8>,
     capacity: usize,
@@ -9,17 +10,21 @@ pub struct SimpleString {
 
 impl SimpleString {
 
+    // function for creating a SimpleString from a string slice    
     pub fn from(s: &str) -> Self {
-        let bytes = s.as_bytes();
-        let capacity = bytes.len();
-        let layout = Layout::array::<u8>(capacity).unwrap();
-        let ptr = unsafe { alloc(layout) };
-        let ptr = NonNull::new(ptr).unwrap_or_else(|| unsafe { libc::abort() });
+        let bytes = s.as_bytes(); // converts string to sequence of bytes
+        let capacity = bytes.len(); // finds length of sequence of bytes
+        let layout = Layout::array::<u8>(capacity).unwrap(); // creates a layout for an array of bytes (u8) with specific capacity as defined before
+        let ptr = unsafe { alloc(layout) }; // allocates memory for the array of bytes
+        // altered below to use .unwrap() to call custom panic handler rather than using .unwrap_or_else(|| unsafe { libc::abort() }) for consistency with above code
+        let ptr = NonNull::new(ptr).unwrap();
 
+        // copies contents of input string into allocated memory
         unsafe {
             core::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr.as_ptr(), bytes.len());
         }
 
+        // returns a SimpleString struct with the allocated memory, capacity, and length of the input string
         SimpleString {
             ptr,
             capacity,
@@ -27,14 +32,19 @@ impl SimpleString {
         }
     }
 
+
+// converts from String to &str
     pub fn as_str(&self) -> &str {
         unsafe {
+            // self.ptr.as_ptr() obtains the underlying raw pointer
             let slice = core::slice::from_raw_parts(self.ptr.as_ptr(), self.length);
             core::str::from_utf8_unchecked(slice)
         }
     }
 }
 
+
+// define behaviour for when simple string goes out of scope
 impl Drop for SimpleString {
     fn drop(&mut self) {
         let layout = Layout::array::<u8>(self.capacity).unwrap();
@@ -49,6 +59,7 @@ mod tests {
 
     use super::*;
 
+    // test for from function to create a SimpleString from a string slice
     #[test]
     fn test_simple_string() {
         let s = SimpleString::from("Hello, World!");
@@ -64,7 +75,7 @@ mod tests {
     }
 
     #[test]
-    fn test_empty_string() {
+    fn test_long_string() {
         let s = SimpleString::from("");
         assert_eq!(s.as_str(), "");
         assert_eq!(s.capacity, 0);
@@ -73,12 +84,9 @@ mod tests {
 
     // other unit test ideas:
     // long string
-    // non-ascii? - but this wont work because of implementation?
     // test drop
     // 
 
-
-
-    // remember to uncomment panic handler code in main.rs
+    // remember to mention altering panic handler code in main.rs
 
 }
