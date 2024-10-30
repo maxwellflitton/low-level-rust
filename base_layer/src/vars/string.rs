@@ -97,16 +97,6 @@ mod tests {
     fn test_drop_behaviour() {
         // need to somehow track memory and ensure deallocation
     }
-
-
-
-    // Test that drop method correctly deallocates memory
-
-    
-    // other unit test ideas:
-    // test drop
-    // could add should_panic and expected parameter, or test that error returns
-
     // remember to mention altering panic handler code in main.rs
 
 }
