@@ -93,20 +93,6 @@ mod tests {
         assert_eq!(s.length, 10);
     }
 
-    // use cargo test --features count-allocations to run - try to fix this:
-    #[cfg(feature = "count_allocations")]
-    #[test]
-    fn test_memory_allocation_deallocation() {
-        let memory = allocation_counter::measure(|| {
-            SimpleString::from("Hello, World!");
-        });
-        // track global memory and ensure deallocation
-    }
-
-    // ensure drop works with capacity of 0 (no memory leaks)
-    // track global memory allocation/deallocation with multiple drops
-    // check capacity = allocated memory
-
-    // remember to mention altering panic handler code in main.rs in PR
-
 }
+
+// ? check no panic occurs when drop
