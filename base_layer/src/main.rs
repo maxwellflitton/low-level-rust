@@ -14,7 +14,6 @@ use memory::allocators::LibcMalloc;
 use collections::vector::SimpleVec;
 use vars::string::SimpleString;
 
-
 #[global_allocator]
 static GLOBAL: LibcMalloc = LibcMalloc;
 
