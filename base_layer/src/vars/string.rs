@@ -59,15 +59,17 @@ mod tests {
 
     use super::*;
 
-    // test for from function to create a SimpleString from a string slice
+    // test SimpleString::from and SimpleString::as_str
     #[test]
-    fn test_simple_string() {
+    fn test_simple_string_from_str() {
         let s = SimpleString::from("Hello, World!");
         assert_eq!(s.as_str(), "Hello, World!");
+        assert_eq!(s.capacity, 13);
+        assert_eq!(s.length, 13);
     }
 
     #[test]
-    fn test_empty_string() {
+    fn test_empty_string_from_str() {
         let s = SimpleString::from("");
         assert_eq!(s.as_str(), "");
         assert_eq!(s.capacity, 0);
@@ -75,17 +77,35 @@ mod tests {
     }
 
     #[test]
-    fn test_long_string() {
-        let s = SimpleString::from("");
-        assert_eq!(s.as_str(), "");
-        assert_eq!(s.capacity, 0);
-        assert_eq!(s.length, 0);
+    fn test_long_string_from_str() {
+        let long_string = "abcd".repeat(100000);
+        let s = SimpleString::from(long_string.as_str());
+        assert_eq!(s.as_str(), "abcd".repeat(100000));
+        assert_eq!(s.capacity, 100000*4);
+        assert_eq!(s.length, 100000*4);
     }
 
+    #[test]
+    fn test_special_string_from_str() {
+        let s = SimpleString::from("Hello 😃");
+        assert_eq!(s.as_str(), "Hello 😃");
+        assert_eq!(s.capacity, 10);
+        assert_eq!(s.length, 10);
+    }
+
+    #[test]
+    fn test_drop_behaviour() {
+        // need to somehow track memory and ensure deallocation
+    }
+
+
+
+    // Test that drop method correctly deallocates memory
+
+    
     // other unit test ideas:
-    // long string
     // test drop
-    // 
+    // could add should_panic and expected parameter, or test that error returns
 
     // remember to mention altering panic handler code in main.rs
 
