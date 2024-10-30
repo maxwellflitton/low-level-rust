@@ -27,7 +27,7 @@ extern "C" fn rust_eh_personality() {}
 #[no_mangle]
 extern "C" fn _Unwind_Resume() {}
 
-// Added conditional compilation of panic handler to prevent it from being called in tests
+// Conditional compilation of panic handler to prevent it from being called in tests
 #[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
