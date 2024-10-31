@@ -14,7 +14,6 @@ use memory::allocators::LibcMalloc;
 use collections::vector::SimpleVec;
 use vars::string::SimpleString;
 
-
 #[global_allocator]
 static GLOBAL: LibcMalloc = LibcMalloc;
 
@@ -28,12 +27,12 @@ extern "C" fn rust_eh_personality() {}
 #[no_mangle]
 extern "C" fn _Unwind_Resume() {}
 
-
+// Conditional compilation of panic handler to prevent it from being called in tests
+#[cfg(not(test))]
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
     unsafe { libc::abort() }
 }
-
 
 #[no_mangle]
 pub extern "C" fn main() {
