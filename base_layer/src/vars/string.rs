@@ -52,7 +52,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_simple_string_from_str() {
+    fn test_simple_string() {
         let s = SimpleString::from("Hello, World!");
         assert_eq!(s.as_str(), "Hello, World!");
         assert_eq!(s.capacity, 13);
@@ -60,7 +60,7 @@ mod tests {
     }
 
     #[test]
-    fn test_empty_string_from_str() {
+    fn test_empty_string() {
         let s = SimpleString::from("");
         assert_eq!(s.as_str(), "");
         assert_eq!(s.capacity, 0);
@@ -68,20 +68,35 @@ mod tests {
     }
 
     #[test]
-    fn test_long_string_from_str() {
-        let long_string = "abcd".repeat(100000);
+    fn test_long_string() {
+        let long_string = "abcd".repeat(1000000);
         let s = SimpleString::from(long_string.as_str());
-        assert_eq!(s.as_str(), "abcd".repeat(100000));
-        assert_eq!(s.capacity, 400000);
-        assert_eq!(s.length, 400000);
+        assert_eq!(s.as_str(), "abcd".repeat(1000000));
+        assert_eq!(s.capacity, 4000000);
+        assert_eq!(s.length, 4000000);
     }
 
     #[test]
-    fn test_special_string_from_str() {
+    fn test_multi_byte_char_string() {
         let s = SimpleString::from("Hello 😃");
         assert_eq!(s.as_str(), "Hello 😃");
         assert_eq!(s.capacity, 10);
         assert_eq!(s.length, 10);
     }
+
+    #[test]
+    fn test_string_with_null_character() {
+        let s = SimpleString::from("Hello\0World");
+        assert_eq!(s.as_str(), "Hello\0World");
+        assert_eq!(s.capacity, 11);
+        assert_eq!(s.length, 11);
+    }
+
+    #[test]
+    fn test_explicit_drop() {
+    let s = SimpleString::from("Test drop");
+    drop(s);
+    }
+    // Test passes if there’s no panic, suggesting successful deallocation, but more comprehensive tests require a memory tracker or external tool like Valgrind.
 
 }
